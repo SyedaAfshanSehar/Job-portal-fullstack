@@ -1,4 +1,5 @@
 import Signup from "./Signup";
+import Login from "./Login";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
@@ -18,6 +19,14 @@ const [jobType, setJobType] = useState("Remote");
 const [logo, setLogo] = useState("");
 const [editingId, setEditingId] = useState(null);
 
+const logout = () => {
+  localStorage.removeItem("access");
+  localStorage.removeItem("refresh");
+
+  alert("Logged Out Successfully!");
+
+  window.location.href = "/login";
+};
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/jobs/")
       .then((response) => response.json())
@@ -163,6 +172,10 @@ return (
     <a href="/">Home</a>
     <a href="/">Jobs</a>
     <a href="/">Contact</a>
+
+    <button onClick={logout} className="apply-btn">
+    Logout
+  </button>
   </div>
 </div>
     <div className="container">
@@ -341,6 +354,11 @@ return (
 <Route
   path="/signup"
   element={<Signup />}
+/>
+
+<Route
+  path="/login"
+  element={<Login />}
 />
 
 </Routes>
