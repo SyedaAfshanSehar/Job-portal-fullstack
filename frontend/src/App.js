@@ -4,6 +4,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import JobDetails from "./JobDetails";
+import ProtectedRoute from "./ProtectedRoute";
 
 
 
@@ -161,7 +162,8 @@ return (
     <Route
   path="/"
   element={
-    <>
+      <ProtectedRoute>
+        <>
     
 <div className="navbar">
   <div className="logo">
@@ -343,6 +345,8 @@ return (
       ))}
         </div>
         </>
+            </ProtectedRoute>
+
       }
     />
 
