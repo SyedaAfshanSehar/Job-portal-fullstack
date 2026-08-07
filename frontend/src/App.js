@@ -1,3 +1,4 @@
+import Signup from "./Signup";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
@@ -149,9 +150,9 @@ return (
   <Routes>
 
     <Route
-      path="/"
-      element={
-      <>
+  path="/"
+  element={
+    <>
     
 <div className="navbar">
   <div className="logo">
@@ -337,8 +338,12 @@ return (
   element={<JobDetails />}
 />
 
+<Route
+  path="/signup"
+  element={<Signup />}
+/>
 
-  </Routes>
+</Routes>
 );
 }
 export default App;

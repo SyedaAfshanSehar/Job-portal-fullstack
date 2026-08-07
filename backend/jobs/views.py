@@ -2,8 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Job, Application
-from .serializers import JobSerializer, ApplicationSerializer
-
+from .serializers import JobSerializer, ApplicationSerializer, RegisterSerializer
 @api_view(["GET", "POST"])
 def job_list(request):
 
@@ -59,6 +58,16 @@ def job_detail(request, id):
 def apply_job(request):
 
     serializer = ApplicationSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["POST"])
+def register_user(request):
+    serializer = RegisterSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save()
