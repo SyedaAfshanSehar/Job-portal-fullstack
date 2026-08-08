@@ -84,3 +84,9 @@ def profile(request):
         "username": request.user.username,
         "email": request.user.email,
     })
+
+@api_view(["GET"])
+def applications(request):
+    applications = Application.objects.all()
+    serializer = ApplicationSerializer(applications, many=True)
+    return Response(serializer.data)

@@ -6,6 +6,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import JobDetails from "./JobDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
+import MyApplications from "./MyApplications";
 
 
 
@@ -371,6 +372,15 @@ return (
   element={
     <ProtectedRoute>
       <Profile />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/applications"
+  element={
+    <ProtectedRoute>
+      <MyApplications />
     </ProtectedRoute>
   }
 />
