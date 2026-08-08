@@ -6,6 +6,7 @@ from .views import (
     job_detail,
     apply_job,
     register_user,
+    profile,
 )
 
 urlpatterns = [
@@ -16,4 +17,5 @@ urlpatterns = [
     path("apply/", apply_job),
 
     path("register/", register_user),
+    path("profile/", profile),
 ]

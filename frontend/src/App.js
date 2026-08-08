@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import JobDetails from "./JobDetails";
 import ProtectedRoute from "./ProtectedRoute";
+import Profile from "./Profile";
+
 
 
 
@@ -363,6 +365,14 @@ return (
 <Route
   path="/login"
   element={<Login />}
+/>
+<Route
+  path="/profile"
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
+  }
 />
 
 </Routes>
