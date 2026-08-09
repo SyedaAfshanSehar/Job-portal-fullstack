@@ -16,6 +16,19 @@ const [resume, setResume] = useState(null);
 const [coverLetter, setCoverLetter] = useState("");
 
 useEffect(() => {
+  fetch("http://127.0.0.1:8000/api/profile/", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      setName(data.username);
+      setEmail(data.email);
+    });
+}, []);
+
+useEffect(() => {
   fetch(`http://127.0.0.1:8000/api/jobs/${id}/`)
     .then((response) => response.json())
     .then((data) => setJob(data));
