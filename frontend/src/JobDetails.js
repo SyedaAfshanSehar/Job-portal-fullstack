@@ -46,12 +46,15 @@ const applyJob = async () => {
   formData.append("cover_letter", coverLetter);
 
   const response = await fetch(
-    "http://127.0.0.1:8000/api/apply/",
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
+  "http://127.0.0.1:8000/api/apply/",
+  {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access")}`,
+    },
+    body: formData,
+  }
+);
 
   if (response.ok) {
 alert("Application Submitted Successfully!");

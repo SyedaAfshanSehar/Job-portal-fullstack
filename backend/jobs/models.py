@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Job(models.Model):
     title = models.CharField(max_length=200)
@@ -18,6 +19,7 @@ class Application(models.Model):
     
     name = models.CharField(max_length=100)
     email = models.EmailField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     phone = models.CharField(max_length=20)
     resume = models.FileField(upload_to="resumes/")
     cover_letter = models.TextField()

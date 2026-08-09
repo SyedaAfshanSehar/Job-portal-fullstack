@@ -56,12 +56,14 @@ def job_detail(request, id):
     return Response(serializer.data)
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def apply_job(request):
 
-    serializer = ApplicationSerializer(data=request.data)
+    data = request.data.copy()
+    serializer = ApplicationSerializer(data=data)
 
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
