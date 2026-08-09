@@ -18,8 +18,18 @@ function MyApplications() {
           <p><strong>Name:</strong> {app.name}</p>
           <p><strong>Email:</strong> {app.email}</p>
           <p><strong>Phone:</strong> {app.phone}</p>
-          <p><strong>Resume:</strong> {app.resume}</p>
-          <p><strong>Cover Letter:</strong> {app.cover_letter}</p>
+<p>
+  <strong>Resume:</strong>{" "}
+  <a
+    href={`http://127.0.0.1:8000${app.resume}`}
+    target="_blank"
+    rel="noreferrer"
+  >
+    Download Resume
+  </a>
+</p>         
+
+ <p><strong>Cover Letter:</strong> {app.cover_letter}</p>
         </div>
       ))}
     </div>
