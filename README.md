@@ -78,6 +78,7 @@ Company Dashboard
 AI Job Recommendations
 
 Project Status
+
 Currently enhancing the project by adding advanced authentication, user-specific applications, and modern UI improvements.
 
 Author
