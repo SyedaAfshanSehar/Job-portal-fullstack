@@ -216,7 +216,7 @@ return (
 </div>
       <h1 className="heading">Latest Jobs</h1>
       <div className="job-card">
-  <h2>Add New Job</h2>
+  <h2>{editingId ? "Edit Job" : "Add New Job"}</h2>
 
   <input
     type="text"
@@ -275,9 +275,9 @@ return (
   <option value="Onsite">Onsite</option>
 </select>
 
-  <button className="apply-btn" onClick={addJob}>
-    Add Job
-  </button>
+ <button className="apply-btn" onClick={addJob}>
+  {editingId ? "Update Job" : "Add Job"}
+</button>
 </div>
       <input
   type="text"
@@ -286,6 +286,7 @@ return (
   onChange={(e) => setSearch(e.target.value)}
 />
 
+<div className="jobs-grid">
       {jobs
   .filter((job) =>
           job.title &&
@@ -346,8 +347,9 @@ return (
 </button>
         </div>
       ))}
-        </div>
-        </>
+    </div>
+    </div>
+    </>
             </ProtectedRoute>
 
       }
