@@ -1,87 +1,64 @@
-Full Stack Job Portal
+# Full Stack Job Portal
 
-A modern Full Stack Job Portal built using React.js, Django, Django REST Framework, JWT Authentication, and SQLite.
+A full-stack job portal where users can register, log in, browse and search jobs, post and manage listings, and apply with a resume upload.
 
-Tech Stack
+![Jobs page](jobs-page.png)
 
-  React.js
-  Django
-  Django REST Framework (DRF)
-  Python
-  SQLite
-  HTML5
-  CSS3
-  JavaScript
-  Bootstrap
-  Git & GitHub
+## Tech Stack
 
+- **Frontend:** React.js, HTML5, CSS3, JavaScript, Bootstrap
+- **Backend:** Python, Django, Django REST Framework (DRF)
+- **Authentication:** JWT
+- **Database:** SQLite
+- **Tools:** Git & GitHub
 
+## Features
 
-Features
+**Authentication**
+- User registration and login
+- JWT authentication
+- Protected routes and logout
 
-Authentication
-User Registration
-User Login
-JWT Authentication
-Protected Routes
-Logout
+**User Profile**
+- View profile with authenticated user data
 
-User Profile
-View Profile
-Authenticated User Data
+**Job Management**
+- Add, edit and delete jobs
+- View all jobs and search jobs
+- Job details page
 
-Job Management
-Add New Job
-Edit Job
-Delete Job
-View All Jobs
-Search Jobs
-Job Details Page
+**Job Application**
+- Apply for jobs with resume upload and cover letter
+- Phone number and email fields with form validation
 
-Job Application
-Apply for Jobs
-Resume Upload
-Cover Letter Submission
-Phone Number
-Email
-Application Form Validation
+**Application Management**
+- View all applications
+- Download resumes and see applicant details
 
-Application Management
-View All Applications
-Resume Download
-Applicant Details
+**UI**
+- Responsive design
+- Hero section and statistics section
+- Modern job cards and search bar
 
-UI Features
-Responsive Design
-Company Logo Display
-Hero Section
-Statistics Section
-Modern Job Cards
-Search Bar
+**Backend**
+- REST APIs with CRUD operations
+- File upload
+- Django models and serializers
 
-Backend Features
-REST APIs
-CRUD Operations
-File Upload
-SQLite Database
-Django Models
-Django Serializers
+## Project Status
 
+In active development. Currently adding advanced authentication, user-specific applications and UI improvements.
 
-Future Improvements
+## Future Improvements
 
-Admin Dashboard
-Email Notifications
-Saved Jobs
-Job Categories
-Company Dashboard
-AI Job Recommendations
+- Admin dashboard
+- Email notifications
+- Saved jobs
+- Job categories
+- Company dashboard
+- AI job recommendations
 
-Project Status
+## Author
 
-Currently enhancing the project by adding advanced authentication, user-specific applications, and modern UI improvements.
-
-Author
-Syeda Afshan Sehar
-GitHub:
-https://github.com/SyedaAfshanSehar
+**Syeda Afshan Sehar**
+GitHub: [SyedaAfshanSehar](https://github.com/SyedaAfshanSehar)
