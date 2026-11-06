@@ -7,6 +7,7 @@ import JobDetails from "./JobDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
 import MyApplications from "./MyApplications";
+import { API_BASE_URL } from "./api";
 
 
 
@@ -22,6 +23,8 @@ const [description, setDescription] = useState("");
 const [jobType, setJobType] = useState("Remote");
 const [logo, setLogo] = useState("");
 const [editingId, setEditingId] = useState(null);
+const [isStaff, setIsStaff] = useState(false);
+const [apiError, setApiError] = useState("");
 
 const logout = () => {
   localStorage.removeItem("access");
@@ -32,11 +35,31 @@ const logout = () => {
   window.location.href = "/login";
 };
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/jobs/")
+  fetch(`${API_BASE_URL}/api/jobs/`)
       .then((response) => response.json())
       .then((data) => setJobs(data));
-  }, []);
+
+  const accessToken = localStorage.getItem("access");
+  if (accessToken) {
+    fetch(`${API_BASE_URL}/api/profile/`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return null;
+        }
+        return response.json();
+      })
+      .then((data) => setIsStaff(data?.is_staff === true))
+      .catch(() => setIsStaff(false));
+  }
+}, []);
   const addJob = async () => {
+    setApiError("");
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("access") || ""}`,
+    };
 
     if (editingId) {
 
@@ -51,16 +74,18 @@ const logout = () => {
 };
 
   const response = await fetch(
-    `http://127.0.0.1:8000/api/jobs/update/${editingId}/`,
+    `${API_BASE_URL}/api/jobs/update/${editingId}/`,
     {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify(updatedJob),
     }
   );
 
+  if (!response.ok) {
+    setApiError("Unable to update this job. Your account may not have permission.");
+    return;
+  }
   const data = await response.json();
 
   setJobs(
@@ -90,25 +115,20 @@ const logout = () => {
 };
 
   const response = await fetch(
-  "http://127.0.0.1:8000/api/jobs/",
+  `${API_BASE_URL}/api/jobs/`,
   {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newJob),
+  method: "POST",
+  headers,
+  body: JSON.stringify(newJob),
   }
 );
 
-const data = await response.json();
-
-console.log("Status:", response.status);
-console.log(data);
-
 if (!response.ok) {
+  setApiError("Unable to create this job. Your account may not have permission.");
   return;
 }
 
+const data = await response.json();
 setJobs([...jobs, data]);
 
 setTitle("");
@@ -137,13 +157,21 @@ const deleteJob = async (id) => {
     return;
   }
 
-  await fetch(
-    `http://127.0.0.1:8000/api/jobs/delete/${id}/`,
+  setApiError("");
+  const response = await fetch(
+    `${API_BASE_URL}/api/jobs/delete/${id}/`,
     {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access") || ""}`,
+      },
     }
   );
 
+  if (!response.ok) {
+    setApiError("Unable to delete this job. Your account may not have permission.");
+    return;
+  }
   setJobs(jobs.filter((job) => job.id !== id));
 };
 
@@ -215,7 +243,7 @@ return (
 
 </div>
       <h1 className="heading">Latest Jobs</h1>
-      <div className="job-card">
+      {isStaff && <div className="job-card">
   <h2>{editingId ? "Edit Job" : "Add New Job"}</h2>
 
   <input
@@ -278,7 +306,8 @@ return (
  <button className="apply-btn" onClick={addJob}>
   {editingId ? "Update Job" : "Add Job"}
 </button>
-</div>
+</div>}
+      {apiError && <p role="alert">{apiError}</p>}
       <input
   type="text"
   placeholder="Search jobs..."
@@ -332,19 +361,19 @@ return (
   </button>
 </Link>
           
-          <button
+          {isStaff && <button
  className="edit-btn"
   onClick={() => editJob(job)}
 >
   Edit
-</button>
+          </button>}
           
-          <button
+          {isStaff && <button
   className="delete-btn"
   onClick={() => deleteJob(job.id)}
 >
   Delete
-</button>
+          </button>}
         </div>
       ))}
     </div>

@@ -8,6 +8,7 @@ from .views import (
     register_user,
     profile,
     applications,
+    application_resume,
 )
 
 urlpatterns = [
@@ -20,4 +21,5 @@ urlpatterns = [
     path("register/", register_user),
     path("profile/", profile),
     path("applications/", applications),
+    path("applications/<int:id>/resume/", application_resume),
 ]
