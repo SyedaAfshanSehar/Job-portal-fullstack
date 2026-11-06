@@ -4,7 +4,13 @@ __pycache__/
 *.sqlite3
 db.sqlite3
 .env
+.env.*
+!.env.example
 venv/
+
+# Local audit archive and uploaded user files
+job-portal-audit.zip
+**/media/
 
 # React / Node
 node_modules/

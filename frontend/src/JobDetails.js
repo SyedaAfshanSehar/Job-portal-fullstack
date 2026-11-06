@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "./api";
 
 function JobDetails() {
    
@@ -16,7 +17,7 @@ const [resume, setResume] = useState(null);
 const [coverLetter, setCoverLetter] = useState("");
 
 useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/profile/", {
+  fetch(`${API_BASE_URL}/api/profile/`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("access")}`,
     },
@@ -29,7 +30,7 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  fetch(`http://127.0.0.1:8000/api/jobs/${id}/`)
+  fetch(`${API_BASE_URL}/api/jobs/${id}/`)
     .then((response) => response.json())
     .then((data) => setJob(data));
 }, [id]);
@@ -46,8 +47,10 @@ const applyJob = async () => {
   formData.append("cover_letter", coverLetter);
 
   const response = await fetch(
-  "http://127.0.0.1:8000/api/apply/",
+  `${API_BASE_URL}/api/apply/`,
   {
+
+    
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("access")}`,

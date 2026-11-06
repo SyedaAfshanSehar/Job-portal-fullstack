@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { API_BASE_URL } from "./api";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -8,7 +9,7 @@ function Login() {
 
   const loginUser = async () => {
     const response = await fetch(
-      "http://127.0.0.1:8000/api/token/",
+      `${API_BASE_URL}/api/token/`,
       {
         method: "POST",
         headers: {
