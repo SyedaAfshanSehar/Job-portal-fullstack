@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "./api";
@@ -7,6 +7,7 @@ function JobDetails() {
    
 const { id } = useParams();
 const navigate = useNavigate();
+const isAuthenticated = Boolean(localStorage.getItem("access"));
 
 const [job, setJob] = useState(null);
 
@@ -17,15 +18,22 @@ const [resume, setResume] = useState(null);
 const [coverLetter, setCoverLetter] = useState("");
 
 useEffect(() => {
+  const accessToken = localStorage.getItem("access");
+  if (!accessToken) {
+    return;
+  }
+
   fetch(`${API_BASE_URL}/api/profile/`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("access")}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   })
-    .then((response) => response.json())
+    .then((response) => (response.ok ? response.json() : null))
     .then((data) => {
-      setName(data.username);
-      setEmail(data.email);
+      if (data) {
+        setName(data.username);
+        setEmail(data.email);
+      }
     });
 }, []);
 
@@ -113,6 +121,8 @@ if (!job) {
 
 <h3>Apply for this Job</h3>
 
+{isAuthenticated ? (
+  <>
 <input
   type="text"
   placeholder="Your Name"
@@ -158,6 +168,12 @@ if (!job) {
 <button onClick={applyJob}>
   Submit Application
 </button>
+  </>
+) : (
+  <p>
+    <Link to="/login">Log in</Link> to apply for this job.
+  </p>
+)}
     </div>
   );
 }

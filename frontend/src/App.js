@@ -1,8 +1,14 @@
 import Signup from "./Signup";
 import Login from "./Login";
 import "./App.css";
-import { useEffect, useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Routes,
+  Route,
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import JobDetails from "./JobDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
@@ -13,6 +19,8 @@ import { API_BASE_URL } from "./api";
 
 
 function App() {
+  const currentRoute = useLocation();
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
   const [title, setTitle] = useState("");
@@ -24,36 +32,66 @@ const [jobType, setJobType] = useState("Remote");
 const [logo, setLogo] = useState("");
 const [editingId, setEditingId] = useState(null);
 const [isStaff, setIsStaff] = useState(false);
+const [isAuthenticated, setIsAuthenticated] = useState(
+  Boolean(localStorage.getItem("access"))
+);
 const [apiError, setApiError] = useState("");
+
+const resetJobForm = useCallback(() => {
+  setEditingId(null);
+  setTitle("");
+  setCompany("");
+  setLocation("");
+  setSalary("");
+  setDescription("");
+  setJobType("Remote");
+  setLogo("");
+}, []);
 
 const logout = () => {
   localStorage.removeItem("access");
   localStorage.removeItem("refresh");
-
+  setIsAuthenticated(false);
+  setIsStaff(false);
+  resetJobForm();
   alert("Logged Out Successfully!");
-
-  window.location.href = "/login";
+  navigate("/login");
 };
   useEffect(() => {
-  fetch(`${API_BASE_URL}/api/jobs/`)
+    fetch(`${API_BASE_URL}/api/jobs/`)
       .then((response) => response.json())
       .then((data) => setJobs(data));
+  }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
   const accessToken = localStorage.getItem("access");
-  if (accessToken) {
+    setIsAuthenticated(Boolean(accessToken));
+    setIsStaff(false);
+
+    if (!accessToken) {
+      resetJobForm();
+      return () => controller.abort();
+    }
+
     fetch(`${API_BASE_URL}/api/profile/`, {
       headers: { Authorization: `Bearer ${accessToken}` },
+      signal: controller.signal,
     })
-      .then((response) => {
-        if (!response.ok) {
-          return null;
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!controller.signal.aborted) {
+          setIsStaff(data?.is_staff === true);
         }
-        return response.json();
       })
-      .then((data) => setIsStaff(data?.is_staff === true))
-      .catch(() => setIsStaff(false));
-  }
-}, []);
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setIsStaff(false);
+        }
+      });
+
+    return () => controller.abort();
+  }, [currentRoute.pathname, resetJobForm]);
   const addJob = async () => {
     setApiError("");
     const headers = {
@@ -94,13 +132,7 @@ const logout = () => {
     )
   );
 
-  setEditingId(null);
-
-  setTitle("");
-  setCompany("");
-  setLocation("");
-  setSalary("");
-  setDescription("");
+  resetJobForm();
 
   return;
 }
@@ -131,21 +163,7 @@ if (!response.ok) {
 const data = await response.json();
 setJobs([...jobs, data]);
 
-setTitle("");
-setCompany("");
-setLocation("");
-setSalary("");
-setDescription("");
-setJobType("Remote");
-setLogo("");
-
-  setTitle("");
-  setCompany("");
-  setLocation("");
-  setSalary("");
-  setDescription("");
-  setJobType("Remote");
-  setLogo("");
+resetJobForm();
 };
 const deleteJob = async (id) => {
 
@@ -186,6 +204,7 @@ const editJob = (job) => {
   setDescription(job.description);
   setJobType(job.job_type);
   setLogo(job.logo);
+  setApiError("");
 };
 return (
   <Routes>
@@ -193,7 +212,6 @@ return (
     <Route
   path="/"
   element={
-      <ProtectedRoute>
         <>
     
 <div className="navbar">
@@ -206,9 +224,16 @@ return (
     <a href="/">Jobs</a>
     <a href="/">Contact</a>
 
-    <button onClick={logout} className="apply-btn">
-    Logout
-  </button>
+    {isAuthenticated ? (
+      <button onClick={logout} className="apply-btn">
+        Logout
+      </button>
+    ) : (
+      <>
+        <Link to="/login">Login</Link>
+        <Link to="/signup">Sign Up</Link>
+      </>
+    )}
   </div>
 </div>
     <div className="container">
@@ -306,6 +331,15 @@ return (
  <button className="apply-btn" onClick={addJob}>
   {editingId ? "Update Job" : "Add Job"}
 </button>
+  {editingId && (
+    <button
+      type="button"
+      className="edit-btn"
+      onClick={resetJobForm}
+    >
+      Cancel Edit
+    </button>
+  )}
 </div>}
       {apiError && <p role="alert">{apiError}</p>}
       <input
@@ -379,7 +413,6 @@ return (
     </div>
     </div>
     </>
-            </ProtectedRoute>
 
       }
     />
